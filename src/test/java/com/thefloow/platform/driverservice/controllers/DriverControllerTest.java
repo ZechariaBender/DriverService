@@ -180,10 +180,10 @@ public class DriverControllerTest {
 		List<Driver> drivers = List.of(oldDriver, newDriver);
 		Instant i = Instant.from(referenceDate.atStartOfDay(ZoneId.systemDefault()));
 		Mockito.when(driverRepository.findAllCreatedAfterDate(i))
-				.thenReturn(drivers.stream()
-						.filter(driver -> driver.getCreationDate()
-								.isAfter(i))
-						.collect(Collectors.toList()));
+			.thenReturn(drivers.stream()
+				.filter(driver -> driver.getCreationDate()
+					.isAfter(i))
+				.collect(Collectors.toList()));
 		ResponseEntity<Collection<Driver>> responseEntity = driverController.getDriversByDate(referenceDate);
 		assertThat(responseEntity.getBody()).satisfies(driversList -> assertThat(driversList).isEqualTo(List.of(newDriver)));
 	}

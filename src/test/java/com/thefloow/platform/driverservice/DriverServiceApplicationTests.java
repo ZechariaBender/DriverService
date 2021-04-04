@@ -1,13 +1,14 @@
 package com.thefloow.platform.driverservice;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DriverServiceApplicationTests {
+public class DriverServiceApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	public void contextLoads() {
+
+	}
 
 }
