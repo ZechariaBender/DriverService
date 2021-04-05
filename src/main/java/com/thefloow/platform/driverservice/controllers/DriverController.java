@@ -30,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * REST controller for the DriverService application.
+ */
 @RestController
 @Validated
 public class DriverController {
@@ -43,6 +47,18 @@ public class DriverController {
 		this.driverRepository = driverRepository;
 	}
 
+	/**
+	 * An endpoint to allow new drivers to be created and stored. This method maps a POST request with a body
+	 * containing a JSON object containing the driver first name, last name and date of birth in key value pairs. It
+	 * should follow the format below, using these parameter names and the date format YYYY-MM-DD.
+	 * {
+	 * 	"firstname": "John",
+	 * 	"lastname": "Smith",
+	 * 	"date_of_birth": "1980-05-01"
+	 * }
+	 * @param createDriverRequest the request JSON object
+	 * @return ResourceResponse 
+	 */
 	@PostMapping(value = "/driver/create", consumes = { "application/json" }, produces = "application/json")
 	public ResponseEntity<ResourceResponse<Driver>> createDriver(@Valid @RequestBody CreateDriverRequest createDriverRequest) {
 
@@ -60,6 +76,10 @@ public class DriverController {
 		return new ResponseEntity<>(new DriverCreatedResponse(savedDriver), HttpStatus.CREATED);
 	}
 
+	/**
+	 * A GET endpoint which returns a list of all existing drivers in JSON format
+	 * @return Collection<Driver> the list of all existing drivers
+	 */
 	@GetMapping(value = "/drivers", produces = { "application/json" })
 	public ResponseEntity<Collection<Driver>> getDrivers() {
 
@@ -67,6 +87,11 @@ public class DriverController {
 		return new ResponseEntity<>(((Collection<Driver>) driverRepository.findAll()), HttpStatus.OK);
 	}
 
+	/**
+	 * A GET endpoint which returns a list of all drivers created after the specified date. The list is returned in JSON format
+	 * @param date date after which drivers returned by this query were created. The date parameter should use the format YYYY-MM-DD.
+	 * @return Collection<Driver> the list of all drivers created after the date
+	 */
 	@GetMapping(value = "/drivers/byDate", produces = { "application/json" })
 	public ResponseEntity<Collection<Driver>> getDriversByDate(
 			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PastOrPresent LocalDate date) {

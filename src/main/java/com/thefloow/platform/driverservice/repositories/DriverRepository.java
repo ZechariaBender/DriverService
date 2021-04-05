@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * A CrudRepository for Driver objects.
+ * If Spring Data JPA is enabled it will automatically implement this interface.
+ */
 public interface DriverRepository extends CrudRepository<Driver, UUID> {
 
     @Query("SELECT d FROM Driver d WHERE d.creationDate > :instant")

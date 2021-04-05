@@ -15,16 +15,28 @@ import io.jsondb.annotation.Document;
 @Document(collection = "drivers", schemaVersion = "1.0")
 public class Driver {
 
+	/**
+	 * A unique ID for the driver
+	 */
 	@io.jsondb.annotation.Id
 	@javax.persistence.Id
 	private UUID id;
 
+	/**
+	 * First Name
+	 */
 	@JsonProperty("firstname")
 	private String firstName;
 
+	/**
+	 * Last Name
+	 */
 	@JsonProperty("lastname")
 	private String lastName;
 
+	/**
+	 * Date of Birth (YYYY-MM-DD format)
+	 */
 	@JsonProperty("date_of_birth")
 	private LocalDate dateOfBirth;
 

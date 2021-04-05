@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import com.thefloow.platform.driverservice.model.Driver;
 import io.jsondb.JsonDBTemplate;
 
+/**
+ * A JsonDBTemplate for Driver objects which implements DriverRepository to serve as the DriverRepository
+ * bean when Spring Data JPA is disabled (i.e. when the 'flat-file-storage' profile is active).
+ */
 public class FlatFileDriverRepository extends JsonDBTemplate implements DriverRepository {
 
 	public FlatFileDriverRepository(String dbFilesLocationString, String baseScanPackage) {

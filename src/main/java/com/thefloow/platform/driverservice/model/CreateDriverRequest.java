@@ -11,14 +11,23 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class CreateDriverRequest {
 
+	/**
+	 * First Name
+	 */
 	@NotBlank(message = "First name is mandatory")
 	@JsonProperty("firstname")
 	private String firstName;
 
+	/**
+	 * Last Name
+	 */
 	@NotBlank(message = "Last name is mandatory")
 	@JsonProperty("lastname")
 	private String lastName;
 
+	/**
+	 * Date of Birth (YYYY-MM-DD format)
+	 */
 	@Past
 	@NotNull
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
