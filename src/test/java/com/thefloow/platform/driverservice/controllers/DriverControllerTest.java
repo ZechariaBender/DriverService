@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Validation;
-import javax.validation.Validator;
 
 import com.thefloow.platform.driverservice.model.CreateDriverRequest;
 import com.thefloow.platform.driverservice.model.Driver;
@@ -23,7 +22,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,15 +30,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class DriverControllerTest {
 
 	@Mock
-	DriverRepository driverRepository;
-	DriverController driverController;
+	private DriverRepository driverRepository;
+	private DriverController driverController;
 	private String firstName = "John";
 	private String lastName = "Smith";
 	private LocalDate dateOfBirth = LocalDate.parse("1980-05-01");
 	private Driver driver = new Driver(firstName, lastName, dateOfBirth);
-	@Spy
-	private Validator validator = Validation.buildDefaultValidatorFactory()
-		.getValidator();
 
 	public DriverControllerTest() {
 
@@ -53,6 +48,7 @@ public class DriverControllerTest {
 		driverController = new DriverController(driverRepository);
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private void initForCreateDriver(Optional<Driver> optionalDriver) {
 
 		Mockito.when(driverRepository.findById(driver.getId()))
@@ -69,15 +65,8 @@ public class DriverControllerTest {
 		ResponseEntity<ResourceResponse<Driver>> responseEntity = driverController.createDriver(createDriverRequest);
 		assertThat(responseEntity.getBody()).satisfies(resourceResponse -> {
 			assertThat(resourceResponse.getMessage()).isEqualTo("SUCCESS - Created new driver record");
-			assertThat(resourceResponse.getTimestamp()).isAfterOrEqualTo(Instant.now()
-				.minusSeconds(1));
 			assertThat(resourceResponse).isExactlyInstanceOf(DriverCreatedResponse.class);
-			assertThat(((DriverCreatedResponse) resourceResponse).getDriver()).satisfies(d -> {
-				assertThat(d.getFirstName()).isEqualTo(firstName);
-				assertThat(d.getLastName()).isEqualTo(lastName);
-				assertThat(d.getDateOfBirth()).isEqualTo(dateOfBirth);
-				assertThat(d).isEqualTo(driver);
-			});
+			assertThat(((DriverCreatedResponse) resourceResponse).getDriver()).isEqualTo(driver);
 		});
 	}
 
@@ -90,15 +79,8 @@ public class DriverControllerTest {
 		assertThat(responseEntity).isNotNull();
 		assertThat(responseEntity.getBody()).satisfies(resourceResponse -> {
 			assertThat(resourceResponse.getMessage()).isEqualTo("ERROR - Driver already exists in records");
-			assertThat(resourceResponse.getTimestamp()).isAfterOrEqualTo(Instant.now()
-				.minusSeconds(1));
 			assertThat(resourceResponse).isExactlyInstanceOf(DriverExistsResponse.class);
-			assertThat(((DriverExistsResponse) resourceResponse).getDriver()).satisfies(d -> {
-				assertThat(d.getFirstName()).isEqualTo(firstName);
-				assertThat(d.getLastName()).isEqualTo(lastName);
-				assertThat(d.getDateOfBirth()).isEqualTo(dateOfBirth);
-				assertThat(d).isEqualTo(driver);
-			});
+			assertThat(((DriverExistsResponse) resourceResponse).getDriver()).isEqualTo(driver);
 		});
 	}
 
@@ -109,10 +91,9 @@ public class DriverControllerTest {
 		driver = new Driver(firstName, lastName, futureDate);
 		initForCreateDriver(Optional.empty());
 		CreateDriverRequest createDriverRequest = new CreateDriverRequest(firstName, lastName, futureDate);
-		System.out.println(validator.forExecutables()
-			.validateParameters(driverController, DriverController.class.getMethod("createDriver",
-				CreateDriverRequest.class), new Object[] { createDriverRequest }));
-		assertThat(validator.forExecutables()
+		assertThat(Validation.buildDefaultValidatorFactory()
+			.getValidator()
+			.forExecutables()
 			.validateParameters(driverController, DriverController.class.getMethod("createDriver",
 				CreateDriverRequest.class), new Object[] { createDriverRequest })).hasSize(1)
 					.allSatisfy(driverControllerConstraintViolation -> assertThat(driverControllerConstraintViolation
@@ -158,15 +139,6 @@ public class DriverControllerTest {
 		responseEntity = driverController.getDrivers();
 		List<Driver> finalDrivers2 = drivers;
 		assertThat(responseEntity.getBody()).satisfies(driversList -> assertThat(driversList).isEqualTo(finalDrivers2));
-	}
-
-	private void initForGetDriversByDate(Collection<Driver> drivers, Instant i) {
-
-		Mockito.when(driverRepository.findAllCreatedAfterDate(i))
-			.thenReturn(drivers.stream()
-				.filter(driver -> driver.getCreationDate()
-					.isAfter(i))
-				.collect(Collectors.toList()));
 	}
 
 	@Test

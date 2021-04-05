@@ -114,13 +114,16 @@ public class Driver {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Driver driver = (Driver) o;
-		return Objects.equals(id, driver.id);
+		return Objects.equals(id, driver.id) &&
+				Objects.equals(firstName, driver.firstName) &&
+				Objects.equals(lastName, driver.lastName) &&
+				Objects.equals(dateOfBirth, driver.dateOfBirth);
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id);
+		return Objects.hash(id, firstName, lastName, dateOfBirth);
 	}
 
 	@Override

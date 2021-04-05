@@ -57,7 +57,7 @@ public class DriverController {
 	 * 	"date_of_birth": "1980-05-01"
 	 * }
 	 * @param createDriverRequest the request JSON object
-	 * @return ResourceResponse 
+	 * @return ResourceResponse - a response which contains the resource and a meaningful message
 	 */
 	@PostMapping(value = "/driver/create", consumes = { "application/json" }, produces = "application/json")
 	public ResponseEntity<ResourceResponse<Driver>> createDriver(@Valid @RequestBody CreateDriverRequest createDriverRequest) {
@@ -78,7 +78,7 @@ public class DriverController {
 
 	/**
 	 * A GET endpoint which returns a list of all existing drivers in JSON format
-	 * @return Collection<Driver> the list of all existing drivers
+	 * @return a list of all existing drivers
 	 */
 	@GetMapping(value = "/drivers", produces = { "application/json" })
 	public ResponseEntity<Collection<Driver>> getDrivers() {
@@ -90,7 +90,7 @@ public class DriverController {
 	/**
 	 * A GET endpoint which returns a list of all drivers created after the specified date. The list is returned in JSON format
 	 * @param date date after which drivers returned by this query were created. The date parameter should use the format YYYY-MM-DD.
-	 * @return Collection<Driver> the list of all drivers created after the date
+	 * @return a list of all drivers created after the date
 	 */
 	@GetMapping(value = "/drivers/byDate", produces = { "application/json" })
 	public ResponseEntity<Collection<Driver>> getDriversByDate(
