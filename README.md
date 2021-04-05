@@ -55,6 +55,6 @@ or setting spring.profiles.active to 'default':
 spring.profiles.active=default
 ```
 In case of database storage, the persistence is abstracted with Spring Data JPA which is compatible with a large variety of database vendors.
-The out-of-the-box implementation is with the H2 in-memory database, perssted to a db file.
+The out-of-the-box implementation is with the H2 in-memory database, persisted to a db file.
 The db file, `driver-service-h2.mv.db`, will located under the `src/main/resources/storage/h2` directory.
 The database vendor and properties can be changed in the [`application.properties`](src/main/resources/application.properties) file.
